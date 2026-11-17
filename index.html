@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>代入消去法｜互動式學習講義</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js"></script>
+<style>
+  body{font-family:'Noto Sans TC','PingFang TC','Microsoft JhengHei',system-ui,sans-serif;background:#f8fafc;color:#1e293b;font-size:19px;line-height:1.7}
+  /* 全頁字級：比 Tailwind 預設各大 3px */
+  .text-xs{font-size:15px!important;line-height:1.65!important}
+  .text-sm{font-size:17px!important;line-height:1.7!important}
+  .text-base{font-size:19px!important}
+  .text-lg{font-size:21px!important}
+  .text-xl{font-size:23px!important}
+  .text-2xl{font-size:27px!important}
+  .text-3xl{font-size:33px!important}
+  .text-4xl{font-size:39px!important}
+  @media(min-width:768px){.md\:text-4xl{font-size:39px!important}}
+  .hidden{display:none!important}
+  .katex{font-size:1.06em}
+  .katex-display{margin:.5em 0;overflow-x:auto;overflow-y:hidden}
+  button{cursor:pointer}
+  .opt-lab{margin-right:.55em}
+  .opt-btn{padding:.65rem .9rem;text-align:left;background:#fff;border:1px solid #cbd5e1;border-radius:.5rem;font-size:17px;font-weight:400;transition:.15s}
+  .opt-btn:hover{border-color:#3b82f6;background:#eff6ff}
+  .opt-btn.ok{background:#dcfce7;border-color:#22c55e;color:#166534}
+  .opt-btn.bad{background:#fee2e2;border-color:#f87171;color:#991b1b}
+  .fb{display:none;margin-top:.6rem;padding:.6rem .8rem;border-radius:.5rem;font-size:15px}
+  .fb.show{display:block}
+  .fb.good{background:#f0fdf4;border:1px solid #86efac;color:#166534}
+  .fb.warn{background:#fef2f2;border:1px solid #fca5a5;color:#991b1b}
+  .note-ok{background:#f0fdf4;border:1px solid #86efac;color:#166534}
+  .note-info{background:#eff6ff;border:1px solid #bfdbfe;color:#1e40af}
+  .btn-main{background:#2563eb;color:#fff;font-weight:700;border-radius:.5rem;padding:.45rem .9rem;font-size:15px}
+  .btn-main:hover{background:#1d4ed8}
+  .btn-green{background:#16a34a;color:#fff;font-weight:700;border-radius:.5rem;padding:.45rem .9rem;font-size:15px}
+  .btn-green:hover{background:#15803d}
+  .btn-ghost{background:#fff;border:1px solid #cbd5e1;color:#334155;font-weight:700;border-radius:.5rem;padding:.4rem .8rem;font-size:15px}
+  .btn-ghost:hover{background:#eff6ff;border-color:#93c5fd}
+  .btn-ghost.sel{background:#2563eb;border-color:#2563eb;color:#fff}
+  .pill{border:1px solid #e2e8f0;color:#94a3b8;border-radius:999px;padding:.35rem .5rem;text-align:center;font-size:15px;font-weight:700;background:#fff;transition:.2s}
+  .pill.active{color:#047857;border-color:#6ee7b7;background:#ecfdf5}
+  .pill.done{color:#166534;border-color:#86efac;background:#f0fdf4}
+  .dict-card{background:#f0f9ff;border:1px solid #e0f2fe;border-radius:.75rem;padding:.9rem 1rem}
+  .op-line{display:none;padding:.55rem .8rem;margin:.45rem 0;border-radius:.5rem;border:1px solid #e2e8f0;background:#fff;text-align:center;font-size:15px}
+  .op-line.show{display:block;animation:fadeUp .3s ease both}
+  .op-line.focus{background:#eff6ff;border-color:#bfdbfe}
+  .op-line.success{background:#f0fdf4;border-color:#86efac}
+  .op-line .optag{display:block;font-size:15px;font-weight:700;color:#64748b;margin-bottom:.15rem}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+  /* 步驟 4：挖空格 + 拖拉 */
+  .fillbox{display:inline-block;min-width:3.4em;min-height:1.9em;vertical-align:middle;margin:0 .3em;padding:0 .4em;border:2px dashed #94a3b8;border-radius:.5rem;background:#f8fafc;text-align:center;line-height:1.9em;cursor:pointer}
+  .fillbox.over{border-color:#2563eb;background:#eff6ff}
+  .fillbox.ok{border:2px solid #22c55e;background:#dcfce7;cursor:default}
+  .fillbox.bad{border-color:#f87171;background:#fee2e2;animation:shake .35s}
+  .chipx{display:inline-block;padding:.25rem .85rem;margin:.2rem;background:#fff;border:1px solid #cbd5e1;border-radius:999px;cursor:grab;user-select:none;font-size:17px}
+  .chipx:hover{border-color:#3b82f6;background:#eff6ff}
+  .chipx.sel{border-color:#2563eb;background:#dbeafe;box-shadow:0 0 0 3px #bfdbfe}
+  @keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+  .sysbox{background:#fff;border:1px solid #e2e8f0;border-radius:.5rem;padding:.2rem .5rem}
+</style>
+</head>
+<body class="p-4 md:p-8">
+<div class="max-w-4xl mx-auto">
+
+  <header class="text-center mb-5">
+    <h1 class="text-3xl md:text-4xl font-black text-slate-800 mb-1">📘 代入消去法</h1>
+    <p class="text-sm text-slate-500 font-bold">互動式學習講義</p>
+  </header>
+
+  <!-- 觀念小辭典 -->
+  <section class="bg-white rounded-xl shadow-sm border p-5 mb-5">
+    <h2 class="font-bold text-slate-700 mb-3">📖 觀念小辭典 <span class="text-xs text-slate-400 font-normal">（闖關時會一個一個學到，現在看不懂沒關係）</span></h2>
+    <div class="grid md:grid-cols-3 gap-3 text-sm">
+      <div class="dict-card"><b>聯立方程式的解</b><br>將 $x$ 與 $y$ 的值代入兩條方程式中，如果能讓兩條方程式的等號都成立，那麼這一組 $x$、$y$ 的值就是聯立方程式的解。</div>
+      <div class="dict-card"><b>代入</b><br>把式子裡的未知數，換成一個數，或換成另一個式子。</div>
+      <div class="dict-card"><b>消去</b><br>代入之後，兩個未知數變成一個，就變成一元一次方程式，可以解了。</div>
+    </div>
+  </section>
+
+  <!-- 固定進度列 -->
+  <div class="sticky top-0 z-30 bg-slate-50/95 backdrop-blur py-3 mb-4 border-b border-slate-200">
+    <div id="progressStatus" class="text-center text-xs font-bold text-slate-500 mb-2">目前進行：步驟 1｜直接代入數字</div>
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-2">
+      <div class="pill active" id="p1">① 直接代入數字</div>
+      <div class="pill" id="p2">② 整個式子代進去</div>
+      <div class="pill" id="p3">③ 代進去要加括號</div>
+      <div class="pill" id="p4">④ 試試看</div>
+    </div>
+  </div>
+
+  <!-- 步驟 1 -->
+  <section id="step1" class="bg-white rounded-xl shadow-md p-6 border border-emerald-200 mb-6">
+    <h2 class="font-bold text-lg text-emerald-700 mb-3">🚩 步驟 1　其中一條已經知道某個未知數是多少：直接代入</h2>
+    <div id="links1" class="p-3 bg-slate-50 rounded-lg border text-xs mb-4 space-y-1"></div>
+    <div class="p-4 rounded-lg note-info text-sm mb-4">
+      <b>先觀察：</b>按「下一步」，看看已經知道的 $y=2$，怎麼被用到另一條方程式裡。
+    </div>
+    <div class="bg-slate-50 p-5 rounded-xl border mb-4">
+      <h4 class="font-bold text-sm mb-1">🛠️ 動手做：解聯立方程式</h4>
+      <p class="text-xs text-slate-600 mb-3">一步一步看，每一行會出現在下面。</p>
+      <div id="tool-s1"></div>
+    </div>
+    <div id="q1"></div>
+    <div id="sum1" class="hidden mt-4 p-4 rounded-lg note-ok text-sm">
+      <div class="mb-1">📌 整理一下：已經知道一個未知數</div>
+      <p>其中一條方程式已經知道某個未知數是多少，就把它代進另一條，變成只有一個未知數的方程式，再解出來。</p>
+    </div>
+    <div id="done1" class="hidden mt-4"><button class="btn-main" aria-label="步驟 1 完成" onclick="completeStep(1)">步驟 1 完成</button></div>
+  </section>
+
+  <!-- 步驟 2 -->
+  <section id="step2" class="hidden bg-white rounded-xl shadow-md p-6 border border-emerald-200 mb-6">
+    <h2 class="font-bold text-lg text-emerald-700 mb-3">🚩 步驟 2　其中一條是「某個未知數＝式子」：整個式子代進去</h2>
+    <div id="links2" class="p-3 bg-slate-50 rounded-lg border text-xs mb-4 space-y-1"></div>
+    <div class="p-4 rounded-lg note-info text-sm mb-4">
+      <b>先觀察：</b>切換兩個例子，看看已經是「某個未知數＝式子」的那一條，換進了另一條的哪裡？
+    </div>
+    <div class="bg-slate-50 p-5 rounded-xl border mb-4">
+      <h4 class="font-bold text-sm mb-1">🛠️ 動手做：解聯立方程式</h4>
+      <p class="text-xs text-slate-600 mb-3">先選一個例子，再按「下一步」。</p>
+      <div id="tool-s2"></div>
+    </div>
+    <div id="q2"></div>
+    <div id="sum2" class="hidden mt-4 p-4 rounded-lg note-ok text-sm">
+      <div class="mb-1">📌 整理一下：整個式子代進去</div>
+      <ul class="list-disc pl-6 space-y-1">
+        <li>找出已經是「某個未知數＝式子」的那一條。</li>
+        <li>另一條裡的這個未知數，整個換成那個式子。</li>
+        <li>解出一個未知數之後，再代回去求另一個未知數。</li>
+      </ul>
+    </div>
+    <div id="done2" class="hidden mt-4"><button class="btn-main" aria-label="步驟 2 完成" onclick="completeStep(2)">步驟 2 完成</button></div>
+  </section>
+
+  <!-- 步驟 3 -->
+  <section id="step3" class="hidden bg-white rounded-xl shadow-md p-6 border border-emerald-200 mb-6">
+    <h2 class="font-bold text-lg text-emerald-700 mb-3">🚩 步驟 3　代進去的式子有加減：要加括號</h2>
+    <div id="links3" class="p-3 bg-slate-50 rounded-lg border text-xs mb-4 space-y-1"></div>
+    <div class="p-4 rounded-lg note-info text-sm mb-4">
+      <b>先觀察：</b>切換兩個例子，看看換進去的式子，為什麼要用括號包起來？括號前面是減號時，去括號會發生什麼事？
+    </div>
+    <div class="bg-slate-50 p-5 rounded-xl border mb-4">
+      <h4 class="font-bold text-sm mb-1">🛠️ 動手做：解聯立方程式</h4>
+      <p class="text-xs text-slate-600 mb-3">先選一個例子，再按「下一步」。</p>
+      <div id="tool-s3"></div>
+    </div>
+    <div id="q3a"></div>
+    <div id="q3bWrap" class="hidden mt-4"><div id="q3b"></div></div>
+    <div id="sum3" class="hidden mt-4 p-4 rounded-lg note-ok text-sm">
+      <div class="mb-1">📌 整理一下：括號</div>
+      <ul class="list-disc pl-6 space-y-1">
+        <li>換進去的式子如果有加減，要加括號。</li>
+        <li>括號前面是減號時，去括號之後每一項都要變號：$-(x+2)=-x-2$。</li>
+      </ul>
+    </div>
+    <div id="done3" class="hidden mt-4"><button class="btn-main" aria-label="步驟 3 完成" onclick="completeStep(3)">步驟 3 完成</button></div>
+  </section>
+
+  <!-- 步驟 4 -->
+  <section id="step4" class="hidden bg-white rounded-xl shadow-md p-6 border border-emerald-200 mb-6">
+    <h2 class="font-bold text-lg text-emerald-700 mb-3">🚩 步驟 4　試試看：把解題過程補完整</h2>
+    <div class="p-4 rounded-lg note-info text-sm mb-4">
+      <b>怎麼做：</b>把下面解題過程的空格補完整。把<b>答案積木</b>（電腦在右邊、手機在上方，捲動時會跟著你）<b>拖</b>到空格裡，或先<b>點</b>一個積木、再點空格（手機用點的）。放對的會變綠色，放錯的會有提示。
+    </div>
+    <div class="bg-slate-50 p-5 rounded-xl border mb-4">
+      <h4 class="font-bold text-sm mb-1">✏️ 解聯立方程式</h4>
+      <div id="sys4" class="sysbox mb-3"></div>
+      <div class="grid md:grid-cols-[1fr_200px] gap-4">
+        <!-- 答案積木：電腦放在右邊、手機放在上方，往下捲動時黏住，一直看得到 -->
+        <div id="bankwrap4" class="sticky top-36 md:top-28 z-20 self-start md:col-start-2 md:row-start-1 bg-white border border-slate-300 rounded-xl shadow-md p-3">
+          <div class="text-xs font-bold text-slate-700 mb-1">答案積木</div>
+          <div class="text-xs text-slate-500 mb-1">拖到空格裡，或先點積木再點空格（可以重複使用）</div>
+          <div id="bank4"></div>
+        </div>
+        <div class="md:col-start-1 md:row-start-1">
+          <div id="solve4"></div>
+          <div id="hint4" class="fb warn"></div>
+          <div class="mt-3 flex flex-wrap items-center gap-2"><button class="btn-ghost" aria-label="重新開始" onclick="reset4()">重新開始</button><span id="prog4" class="text-xs text-slate-500"></span></div>
+        </div>
+      </div>
+    </div>
+    <div id="win4" class="hidden mt-4 p-4 rounded-lg note-ok text-sm">
+      ✅ 你完成了！答案是 $x=3$、$y=7$。驗算：$4\times3-7=5$，$7=2\times3+1$，兩條都成立。
+    </div>
+    <div id="done4" class="hidden mt-4"><button class="btn-green" aria-label="完成整題" onclick="completeStep(4)">完成整題</button></div>
+    <div id="finalMsg" class="hidden mt-4 p-4 rounded-lg note-ok text-sm font-bold">🎉 四個步驟都完成了！你已經會：先找出已經知道的未知數（或已經是「未知數＝式子」的那一條），整個換進另一條，換進去的式子有加減要加括號，解出一個未知數之後，再代回去求另一個，最後自己把整個過程補完整。</div>
+  </section>
+
+  <footer class="text-center text-xs text-slate-400 mt-8">互動式學習講義　代入消去法</footer>
+</div>
+
+<script>
+const R = String.raw;
+const katexConfig = {
+  delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}],
+  ignoredClasses:['no-katex'], throwOnError:false, strict:'ignore'
+};
+function typeset(el){ if(window.renderMathInElement){ renderMathInElement(el || document.body, katexConfig); } }
+function $id(i){ return document.getElementById(i); }
+const BLUE = '#2563eb', ORANGE = '#ea580c';
+/* 用 \textcolor：只染括號裡的內容，不會把顏色帶到後面 */
+const cb = t => `\\textcolor{${BLUE}}{${t}}`, co = t => `\\textcolor{${ORANGE}}{${t}}`;
+/* 聯立方程式（①②編號） */
+const sys = (e1, e2) => R`$$\left\{\begin{array}{ll}${e1}&\text{\textcircled{1}}\\[6pt]${e2}&\text{\textcircled{2}}\end{array}\right.$$`;
+
+/* ========== 影片連結（每個步驟一支） ========== */
+const YT = 'https://www.youtube.com/watch?v=';
+const STEP_LINKS = {
+  1:{label:'📚 想先複習的話', v:['代入消去法　例題 2','p1EqdrcoLgU']},
+  2:{label:'📚 想先複習的話', v:['代入消去法　隨堂練習','l1nKEa56qBo']},
+  3:{label:'📚 想先複習的話', v:['代入消去法　概念講解','TAKuCvD-dJ0']}
+};
+function renderLinks(){
+  for(const n of [1,2,3]){
+    const c = STEP_LINKS[n];
+    $id('links' + n).innerHTML = `<div class="font-bold">${c.label}</div>`
+      + `<div>看影片：<a href="${YT}${c.v[1]}" target="_blank" rel="noopener" aria-label="影片：${c.v[0]}" class="text-blue-600 underline">${c.v[0]}</a></div>`;
+  }
+}
+
+/* ========== 通用播放器（一行一行出現） ========== */
+const players = {};
+function setPlayer(n, lines, opt){
+  players[n] = Object.assign({lines, idx:0}, opt || {});
+  $id('lines' + n).innerHTML = lines.map((l,i) => `<div class="op-line ${l.cls}" id="l${n}_${i}">${l.html}</div>`).join('');
+  renderControls(n); typeset($id('lines' + n));
+}
+function renderControls(n){
+  const p = players[n], atEnd = p.idx >= p.lines.length;
+  $id('ctl' + n).innerHTML = (!atEnd ? `<button class="btn-main" aria-label="下一步" onclick="nextLine(${n})">下一步</button>` : `<span class="text-xs text-slate-500">${p.endHint}</span>`)
+    + `<button class="btn-ghost" aria-label="重新播放" onclick="resetPlayer(${n})">重新播放</button>`;
+}
+function nextLine(n){
+  const p = players[n];
+  if(p.idx < p.lines.length){
+    const el = $id(`l${n}_${p.idx}`); el.classList.add('show');
+    el.scrollIntoView({behavior:'smooth', block:'nearest'});
+    p.idx++;
+  }
+  renderControls(n);
+}
+function resetPlayer(n){
+  players[n].idx = 0;
+  document.querySelectorAll(`#lines${n} .op-line`).forEach(e => e.classList.remove('show'));
+  renderControls(n);
+}
+
+/* ========== 三個步驟的示範（和影片的例題不同） ========== */
+const tg = (t, html) => `<span class="optag">${t}</span>${html}`;
+const EXS = {
+  1:[{e1:'x+3y=10', e2:'y=2', lines:[
+    {cls:'focus', html:tg('第 1 步：先看哪一條已經知道某個未知數是多少', R`②式告訴我們：$y=2$，所以 $y$ 就是 $2$。`)},
+    {cls:'', html:tg('第 2 步：把 ① 式裡的 $y$，換成 $2$（代入）', R`$$x+3${co('y')}=10\quad\Rightarrow\quad x+3\times${co('2')}=10$$`)},
+    {cls:'success', html:tg('第 3 步：解一元一次方程式', R`$$x+6=10\quad\Rightarrow\quad x=4$$`)},
+    {cls:'success', html:tg('第 4 步：寫出答案，並代回兩條式子驗算', R`$x=4,\;y=2$。驗算：$4+3\times2=10$，$2=2$，兩條都成立。`)}
+  ]}],
+  2:[
+   {e1:'y=2x', e2:'3x+y=10', lines:[
+    {cls:'focus', html:tg('第 1 步：看哪一條已經是「某個未知數＝式子」', R`①式：$y=2x$，也就是 $y$ 就是 $2x$。`)},
+    {cls:'', html:tg('第 2 步：②式遇到 $y$，就整個換成 $2x$', R`$$3x+${co('y')}=10\quad\Rightarrow\quad 3x+${co('2x')}=10$$`)},
+    {cls:'success', html:tg('第 3 步：解一元一次方程式', R`$$5x=10\quad\Rightarrow\quad x=2$$`)},
+    {cls:'', html:tg('第 4 步：把 $x=2$ 代回 ① 式，求 $y$', R`$$y=2x=2\times2=4$$`)},
+    {cls:'success', html:tg('第 5 步：寫出答案，並代回兩條式子驗算', R`$x=2,\;y=4$。驗算：$3\times2+4=10$，$4=2\times2$，兩條都成立。`)}
+   ]},
+   {e1:'x=3y', e2:'x+2y=15', lines:[
+    {cls:'focus', html:tg('第 1 步：看哪一條已經是「某個未知數＝式子」', R`①式：$x=3y$，也就是 $x$ 就是 $3y$。`)},
+    {cls:'', html:tg('第 2 步：②式遇到 $x$，就整個換成 $3y$', R`$$${co('x')}+2y=15\quad\Rightarrow\quad ${co('3y')}+2y=15$$`)},
+    {cls:'success', html:tg('第 3 步：解一元一次方程式', R`$$5y=15\quad\Rightarrow\quad y=3$$`)},
+    {cls:'', html:tg('第 4 步：把 $y=3$ 代回 ① 式，求 $x$', R`$$x=3y=3\times3=9$$`)},
+    {cls:'success', html:tg('第 5 步：寫出答案，並代回兩條式子驗算', R`$x=9,\;y=3$。驗算：$9+2\times3=15$，$9=3\times3$，兩條都成立。`)}
+   ]}
+  ],
+  3:[
+   {e1:'x=y+2', e2:'2x+3y=14', lines:[
+    {cls:'focus', html:tg('第 1 步：看哪一條已經是「某個未知數＝式子」', R`①式：$x=y+2$，也就是 $x$ 就是 $y+2$。`)},
+    {cls:'', html:tg('第 2 步：②式遇到 $x$，換成 $y+2$：它有加號，要整個包起來，加括號', R`$$2${co('x')}+3y=14\quad\Rightarrow\quad 2${co('(y+2)')}+3y=14$$`)},
+    {cls:'', html:tg('第 3 步：去括號（乘 $2$ 要乘到括號裡的每一項）', R`$$2(y+2)+3y=14\quad\Rightarrow\quad 2y+4+3y=14$$`)},
+    {cls:'success', html:tg('第 4 步：合併同類項，解 $y$', R`$$5y+4=14\quad\Rightarrow\quad 5y=10\quad\Rightarrow\quad y=2$$`)},
+    {cls:'', html:tg('第 5 步：把 $y=2$ 代回 ① 式，求 $x$', R`$$x=y+2=2+2=4$$`)},
+    {cls:'success', html:tg('第 6 步：寫出答案，並代回兩條式子驗算', R`$x=4,\;y=2$。驗算：$2\times4+3\times2=14$，$4=2+2$，兩條都成立。`)}
+   ]},
+   {e1:'y=x-3', e2:'4x-y=9', lines:[
+    {cls:'focus', html:tg('第 1 步：看哪一條已經是「某個未知數＝式子」', R`①式：$y=x-3$，也就是 $y$ 就是 $x-3$。`)},
+    {cls:'', html:tg('第 2 步：②式遇到 $y$，換成 $x-3$：要加括號（前面還有減號）', R`$$4x-${co('y')}=9\quad\Rightarrow\quad 4x-${co('(x-3)')}=9$$`)},
+    {cls:'', html:tg('第 3 步：去括號：括號前面是減號，括號裡每一項都要變號', R`$$4x-(x-3)=9\quad\Rightarrow\quad 4x-x+3=9$$`)},
+    {cls:'success', html:tg('第 4 步：合併同類項，解 $x$', R`$$3x+3=9\quad\Rightarrow\quad 3x=6\quad\Rightarrow\quad x=2$$`)},
+    {cls:'', html:tg('第 5 步：把 $x=2$ 代回 ① 式，求 $y$', R`$$y=x-3=2-3=-1$$`)},
+    {cls:'success', html:tg('第 6 步：寫出答案，並代回兩條式子驗算', R`$x=2,\;y=-1$。驗算：$4\times2-(-1)=9$，$-1=2-3$，兩條都成立。`)}
+   ]}
+  ]
+};
+function toolHTML(n){
+  const exs = EXS[n];
+  const tog = exs.length > 1 ? `<div class="flex flex-wrap items-center gap-2 mb-3"><span class="text-xs">選一個例子：</span>`
+    + exs.map((e,i) => `<button id="ex${n}-${i}" class="btn-ghost${i === 0 ? ' sel' : ''}" aria-label="例子${'一二'[i]}" onclick="loadEx(${n},${i})">例子 ${'①②'[i]}</button>`).join('') + `</div>` : '';
+  return `${tog}<div id="sys${n}" class="sysbox mb-2"></div><div id="lines${n}"></div><div class="flex flex-wrap items-center gap-2 mt-3" id="ctl${n}"></div>`;
+}
+function loadEx(n, i){
+  const exs = EXS[n];
+  exs.forEach((e,k) => { const b = $id(`ex${n}-${k}`); if(b){ b.className = 'btn-ghost' + (k === i ? ' sel' : ''); } });
+  const sy = $id('sys' + n); sy.innerHTML = sys(exs[i].e1, exs[i].e2); typeset(sy);
+  setPlayer(n, exs[i].lines, {endHint:'接著回答下面的問題。'});
+}
+
+/* ========== 小題（式子和影片、示範都不同） ========== */
+const QS = {
+  '1':{stem:R`解聯立方程式 ${sys('2x+y=9','x=3')} 解是？`, correct:1, opts:[
+     {t:R`$x=3$、$y=6$`, fb:R`①式是 $2x+y=9$，$x$ 換成 $3$ 之後是 $2\times3+y=9$，不是 $3+y=9$。`},
+     {t:R`$x=3$、$y=3$`, fb:R`對！②式知道 $x=3$，代入①式：$2\times3+y=9$，$6+y=9$，所以 $y=3$。`},
+     {t:R`$x=3$、$y=15$`, fb:R`$6+y=9$ 時，$6$ 要移到右邊變成 $-6$：$y=9-6=3$，不是 $9+6$。`}]},
+  '2':{stem:R`解聯立方程式 ${sys('x=4y','2x-y=21')} 把 ① 代入 ②，得到哪一個式子？`, correct:2, opts:[
+     {t:R`$2\times4-y=21$`, fb:R`①式說 $x$ 就是 $4y$，要換成整個 $4y$，不是只有 $4$。`},
+     {t:R`$2x-4y=21$`, fb:R`①式是 $x=4y$，要換掉的是 ②式裡的 $x$，不是 $y$。`},
+     {t:R`$2\times4y-y=21$`, fb:R`對！②式遇到 $x$，就整個換成 $4y$：$2\times4y-y=21$，$7y=21$，$y=3$，再代回 $x=4y=12$。`}]},
+  '3a':{stem:R`解聯立方程式 ${sys('x=y-3','2x+y=6')} 把 ① 代入 ②，得到哪一個式子？`, correct:1, opts:[
+     {t:R`$2y-3+y=6$`, fb:R`①式說 $x=y-3$，換進去時 $y-3$ 是一個整體，乘 $2$ 要加括號。沒有括號，$-3$ 就沒被乘到 $2$。`},
+     {t:R`$2(y-3)+y=6$`, fb:R`對！換成 $(y-3)$ 要加括號，乘 $2$ 才會兩項都乘到：$2(y-3)+y=6$，去括號得 $3y-6=6$，$y=4$，再代回 $x=y-3=1$。`},
+     {t:R`$2(3-y)+y=6$`, fb:R`①式是 $x=y-3$，不是 $x=3-y$，$y$ 和 $3$ 的順序、符號都不能調換。`}]},
+  '3b':{stem:R`解聯立方程式 ${sys('y=x+2','5x-y=6')} 把 ① 代入 ② 並去括號，得到哪一個式子？`, correct:0, opts:[
+     {t:R`$5x-x-2=6$`, fb:R`對！$5x-(x+2)=5x-x-2$，所以 $4x-2=6$，$x=2$，再代回 $y=x+2=4$。`},
+     {t:R`$5x-x+2=6$`, fb:R`括號前面是減號，括號裡每一項都要變號：$-(x+2)=-x-2$，$+2$ 要變成 $-2$。`},
+     {t:R`$5x+x+2=6$`, fb:R`$5x-(x+2)$ 的 $x$ 前面是減號，$-x$ 不會變成 $+x$。去括號：$-(x+2)=-x-2$。`}]}
+};
+function renderQ(key){
+  const q = QS[key], L = ['$(\\mathrm{A})$','$(\\mathrm{B})$','$(\\mathrm{C})$'];
+  $id('q' + key).innerHTML = `<div class="text-sm mb-2">${q.stem}</div>
+    <div class="grid gap-2" id="c${key}">${q.opts.map((o,i) => `<button class="opt-btn" aria-label="選項${'ABC'[i]}" onclick="answer('${key}',${i},this)"><span class="opt-lab">${L[i]}</span>${o.t}</button>`).join('')}</div>
+    <div class="fb" id="fb${key}"></div>`;
+  typeset($id('q' + key));
+}
+function answer(key, i, btn){
+  const q = QS[key], ok = (i === q.correct), fb = $id('fb' + key);
+  document.querySelectorAll(`#c${key} .opt-btn`).forEach(b => b.classList.remove('ok','bad'));
+  btn.classList.add(ok ? 'ok' : 'bad');
+  fb.className = 'fb show ' + (ok ? 'good' : 'warn');
+  fb.innerHTML = (ok ? '✅ ' : '🤔 ') + q.opts[i].fb; typeset(fb);
+  if(!ok){ return; }
+  if(key === '3a'){ const w = $id('q3bWrap'); w.classList.remove('hidden'); typeset(w); return; }
+  const n = key === '3b' ? '3' : key;
+  const sm = $id('sum' + n); sm.classList.remove('hidden'); typeset(sm);
+  $id('done' + n).classList.remove('hidden');
+}
+
+/* ========== 步驟 4：挖空格 + 拖拉 ========== */
+const CHIPS = [
+  {v:'2x+1',  say:'2x 加 1'},
+  {v:'(2x+1)', say:'括號 2x 加 1'},
+  {v:'2x-1',  say:'2x 減 1'},
+  {v:'+1',    say:'加 1'},
+  {v:'-1',    say:'減 1'},
+  {v:'3',     say:'3'},
+  {v:'6',     say:'6'},
+  {v:'7',     say:'7'}
+];
+const ANS4 = {b1:'2x+1', b2:'(2x+1)', b3:'-1', b4:'6', b5:'3', b6:'3', b7:'7'};
+const HINT4 = {
+  b1:{_:R`①式是 $y=2x+1$，把它抄下來：$y$ 就是 $2x+1$。`},
+  b2:{'2x+1':R`$2x+1$ 有加號，而且前面是減號，換進去要加括號：$4x-(2x+1)$。`, _:R`②式遇到 $y$，要換成①式說的那個式子，而且要加括號。`},
+  b3:{'+1':R`括號前面是減號，括號裡每一項都要變號：$-(2x+1)=-2x-1$，所以是 $-1$。`, _:R`去括號：$4x-(2x+1)=4x-2x-1$，空格要填 $-1$。`},
+  b4:{'3':R`$2x-1=5$，$-1$ 移到右邊變成 $+1$：$2x=5+1$。`, _:R`$2x-1=5$，$-1$ 移到右邊變成 $+1$：$2x=5+1=6$。`},
+  b5:{'6':R`$2x=6$，兩邊要同除以 $2$，$x$ 不是 $6$。`, _:R`$2x=6$，兩邊同除以 $2$：$x=6\div2$。`},
+  b6:{_:R`把 $x=3$ 代回①式：$y=2x+1=2\times3+1$。`},
+  b7:{'6':R`$2\times3=6$，還要再加 $1$：$6+1$。`, _:R`$y=2\times3+1=6+1$。`}
+};
+const fillB = id => `<span class="fillbox" id="fb_${id}" data-b="${id}" role="button" tabindex="0" aria-label="空格 ${id.slice(1)}"></span>`;
+const LINES4 = [
+  tg('第 1 步：看哪一條已經是「某個未知數＝式子」', R`①式：$y=$${fillB('b1')}，所以 $y$ 就是它。`),
+  tg('第 2 步：②式遇到 $y$，整個換成它', R`$4x-$${fillB('b2')}$=5$`),
+  tg('第 3 步：去括號（括號前面是減號，每一項都要變號）', R`$4x-(2x+1)=5\quad\Rightarrow\quad 4x-2x$${fillB('b3')}$=5$`),
+  tg('第 4 步：合併同類項，解 $x$', R`$2x-1=5\quad\Rightarrow\quad 2x=$${fillB('b4')}$\quad\Rightarrow\quad x=$${fillB('b5')}`),
+  tg('第 5 步：把 $x=3$ 代回 ① 式，求 $y$', R`$y=2x+1=2\times$${fillB('b6')}$+1=$${fillB('b7')}`)
+];
+let sel4 = null, drag4 = null; const filled4 = new Set();
+function init4(){
+  const sy = $id('sys4'); sy.innerHTML = sys('y=2x+1','4x-y=5');
+  $id('solve4').innerHTML = LINES4.map(h => `<div class="op-line show" style="text-align:center">${h}</div>`).join('');
+  $id('bank4').innerHTML = CHIPS.map((c,i) => `<span class="chipx" draggable="true" data-v="${c.v}" role="button" tabindex="0" aria-label="答案積木 ${i + 1}：${c.say}">$${c.v}$</span>`).join('');
+  document.querySelectorAll('#bank4 .chipx').forEach(ch => {
+    ch.addEventListener('dragstart', e => { drag4 = ch.dataset.v; try{ e.dataTransfer.setData('text/plain', drag4); }catch(_){} });
+    ch.addEventListener('dragend', () => { drag4 = null; });
+    ch.addEventListener('click', () => selectChip(ch.dataset.v));
+    ch.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); selectChip(ch.dataset.v); } });
+  });
+  document.querySelectorAll('#solve4 .fillbox').forEach(bx => {
+    bx.addEventListener('dragover', e => { e.preventDefault(); bx.classList.add('over'); });
+    bx.addEventListener('dragleave', () => bx.classList.remove('over'));
+    bx.addEventListener('drop', e => { e.preventDefault(); bx.classList.remove('over'); const v = drag4 || (e.dataTransfer && e.dataTransfer.getData('text/plain')); if(v){ placeChip(bx.dataset.b, v); } });
+    bx.addEventListener('click', () => { if(sel4){ placeChip(bx.dataset.b, sel4); } });
+    bx.addEventListener('keydown', e => { if((e.key === 'Enter' || e.key === ' ') && sel4){ e.preventDefault(); placeChip(bx.dataset.b, sel4); } });
+  });
+  typeset($id('step4'));
+  updateProg4();
+}
+function selectChip(v){
+  sel4 = (sel4 === v) ? null : v;
+  document.querySelectorAll('#bank4 .chipx').forEach(ch => ch.classList.toggle('sel', ch.dataset.v === sel4));
+}
+function updateProg4(){ $id('prog4').textContent = `已經填對 ${filled4.size} / ${Object.keys(ANS4).length} 格`; }
+function showHint4(html){ const h = $id('hint4'); if(!html){ h.classList.remove('show'); h.innerHTML = ''; return; } h.innerHTML = '🤔 ' + html; h.classList.add('show'); typeset(h); }
+function placeChip(bid, v){
+  const box = $id('fb_' + bid);
+  if(box.classList.contains('ok')){ return; }
+  if(v === ANS4[bid]){
+    box.classList.remove('bad'); box.classList.add('ok'); box.innerHTML = `$${v}$`; typeset(box);
+    filled4.add(bid); showHint4(''); updateProg4();
+    sel4 = null; document.querySelectorAll('#bank4 .chipx').forEach(ch => ch.classList.remove('sel'));   /* 放對之後自動取消選取 */
+    if(filled4.size === Object.keys(ANS4).length){
+      const w = $id('win4'); w.classList.remove('hidden'); typeset(w); $id('done4').classList.remove('hidden');
+    }
+  } else {
+    box.classList.add('bad'); setTimeout(() => box.classList.remove('bad'), 700);
+    const hh = HINT4[bid]; showHint4(hh[v] || hh._);
+  }
+}
+function reset4(){
+  filled4.clear(); sel4 = null; drag4 = null;
+  document.querySelectorAll('#solve4 .fillbox').forEach(b => { b.className = 'fillbox'; b.innerHTML = ''; });
+  document.querySelectorAll('#bank4 .chipx').forEach(ch => ch.classList.remove('sel'));
+  showHint4(''); updateProg4(); $id('win4').classList.add('hidden'); $id('done4').classList.add('hidden');
+}
+
+/* ========== 進度 ========== */
+const stepNames = ['','直接代入數字','整個式子代進去','代進去要加括號','試試看'];
+function completeStep(n){
+  $id('p' + n).className = 'pill done';
+  if(n < 4){
+    $id('p' + (n + 1)).className = 'pill active';
+    $id('progressStatus').textContent = `目前進行：步驟 ${n + 1}｜${stepNames[n + 1]}`;
+    const next = $id('step' + (n + 1)); next.classList.remove('hidden'); typeset(next);
+    setTimeout(() => next.scrollIntoView({behavior:'smooth', block:'start'}), 80);
+  } else {
+    $id('progressStatus').textContent = '四個步驟全部完成 ✓';
+    const m = $id('finalMsg'); m.classList.remove('hidden'); typeset(m);
+    m.scrollIntoView({behavior:'smooth', block:'center'});
+  }
+}
+
+window.addEventListener('load', () => {
+  renderLinks();
+  [1,2,3].forEach(n => { $id('tool-s' + n).innerHTML = toolHTML(n); loadEx(n, 0); });
+  ['1','2','3a','3b'].forEach(renderQ);
+  init4();
+  typeset(document.body);
+});
+</script>
+</body>
+</html>
